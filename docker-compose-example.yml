@@ -1,0 +1,50 @@
+#version: '2'
+
+#services:
+  elasticsearch:
+    image: eeacms/elk-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearchData:/usr/share/elasticsearch/data
+      - /backups:/backups
+
+    environment: 
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      LOGSTASH_RW_USERNAME: changeme
+      LOGSTASH_RW_PASSWORD: changeme
+
+      #must match below!
+      KIBANA_RW_USERNAME: changeme
+      KIBANA_RW_PASSWORD: changeme
+      ENABLE_SSL: changeme
+      CHECKHEALTH: "ip1, ip2" #set to 127.0.0.1 to void it
+      #in case you don't want public read only access, uncommend and set
+      #KIBANA_RO_USERNAME: changeme
+      #KIBANA_RO_PASSWORD: changeme
+
+  logstash:
+    image: logstash
+    volumes:
+      - logstashConfig:/etc/logstash/conf.d
+      - /backups:/backups
+    ports:
+      - "5001:5000"
+    links:
+      - elasticsearch:elasticsearch
+
+  kibana:
+    image: eeacms/elk-kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - /backups:/backups
+    links:
+      - elasticsearch:elasticsearch
+    environment:
+      #must match above!
+      KIBANA_RW_USERNAME: changeme
+      KIBANA_RW_PASSWORD: changeme
+      ENABLE_SSL: changeme
+    
