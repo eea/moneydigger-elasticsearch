@@ -19,16 +19,15 @@ if [[ $ELASTICSEARCH_MASTER = "YES" ]]; then
   fi
   export TESTREADONLYREST=''
 
-  rm -rf /tmp/ssl
-  mkdir -p /tmp/ssl
-  /usr/share/elasticsearch/jdk/bin/keytool -genkey -keyalg RSA -noprompt -alias $SERVERNAME -dname "CN=$SERVERNAME,OU=IDM,O=EEA,L=IDM1,C=DK" -deststoretype pkcs12 -keystore /tmp/ssl/self.jks -storepass $ELASTICSEARCH_PASSWORD -keypass $ELASTICSEARCH_PASSWORD
-  /usr/share/elasticsearch/jdk/bin/keytool -keystore  /tmp/ssl/self.jks -alias $SERVERNAME -export -file  /tmp/ssl/self.cert -srcstorepass $ELASTICSEARCH_PASSWORD -deststorepass $ELASTICSEARCH_PASSWORD
-  #/opt/jdk-15.0.1+9/bin/keytool
+  #rm -rf /tmp/ssl
+  #mkdir -p /tmp/ssl
+  #/usr/share/elasticsearch/jdk/bin/keytool -genkey -keyalg RSA -noprompt -alias $SERVERNAME -dname "CN=$SERVERNAME,OU=IDM,O=EEA,L=IDM1,C=DK" -deststoretype pkcs12 -keystore /tmp/ssl/self.jks -storepass $ELASTICSEARCH_PASSWORD -keypass $ELASTICSEARCH_PASSWORD
+  #/usr/share/elasticsearch/jdk/bin/keytool -keystore  /tmp/ssl/self.jks -alias $SERVERNAME -export -file  /tmp/ssl/self.cert -srcstorepass $ELASTICSEARCH_PASSWORD -deststorepass $ELASTICSEARCH_PASSWORD
 
-  rm -f /usr/share/elasticsearch/config/self.jks 
-  cp /tmp/ssl/self.jks /usr/share/elasticsearch/config/self.jks
+  #rm -f /usr/share/elasticsearch/config/self.jks 
+  #cp /tmp/ssl/self.jks /usr/share/elasticsearch/config/self.jks
  
-  chmod 400 /usr/share/elasticsearch/config/self.jks 
+  #chmod 400 /usr/share/elasticsearch/config/self.jks 
 
   #sed "s#CHECKHEALTH#$CHECKHEALTH#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
   sed "s#CHECKHEALTH#$CHECKHEALTH#g" -i /usr/share/elasticsearch/config/readonlyrest.yml

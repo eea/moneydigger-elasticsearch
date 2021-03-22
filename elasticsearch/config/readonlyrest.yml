@@ -14,16 +14,16 @@ readonlyrest:
 
   access_control_rules:
 
-#  - name: "::LOCALHOST::"
-#    type: allow
-#    hosts: [127.0.0.1, localhost]
-#    verbosity: error
+  - name: "::LOCALHOST::"
+    type: allow
+    hosts: [127.0.0.1, localhost]
+    verbosity: error
 
-#  - name: "::CHECK_MK::"
-#    type: allow
-#    hosts: [CHECKHEALTH]
-#    actions: ["cluster:monitor/health"]
-#    verbosity: error
+  - name: "::CHECK_MK::"
+    type: allow
+    hosts: [CHECKHEALTH]
+    actions: ["cluster:monitor/health"]
+    verbosity: error
 
   - name: "::LOGSTASH::"
     auth_key: LOGSTASH_RW_USERNAME:LOGSTASH_RW_PASSWORD
