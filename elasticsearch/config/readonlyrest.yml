@@ -1,13 +1,12 @@
 readonlyrest:
   enable: true
-  ssl:
-    enable: true
-#    keystore_file: "/tmp/ssl/self.jks"
-    keystore_file: "self.jks"
-    keystore_pass: KIBANA_RW_PASSWORD
-    key_pass: KIBANA_RW_PASSWORD
-    #allowed_protocols: ["TLSv1.2"]
-    #allowed_ciphers: ["TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"]
+  #  ssl:
+  #  enable: true
+  #  keystore_file: "/usr/share/elasticsearch/config/self.jks"
+  #  keystore_pass: ELASTICSEARCH_PASSWORD
+  #  key_pass: ELASTICSEARCH_PASSWORD
+  #  #allowed_protocols: ["TLSv1.2"]
+  #  #allowed_ciphers: ["TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"]
 
   response_if_req_forbidden: Not authorized
 
@@ -15,16 +14,16 @@ readonlyrest:
 
   access_control_rules:
 
-  - name: "::LOCALHOST::"
-    type: allow
-    hosts: [127.0.0.1, localhost]
-    verbosity: error
+#  - name: "::LOCALHOST::"
+#    type: allow
+#    hosts: [127.0.0.1, localhost]
+#    verbosity: error
 
-  - name: "::CHECK_MK::"
-    type: allow
-    hosts: [CHECKHEALTH]
-    actions: ["cluster:monitor/health"]
-    verbosity: error
+#  - name: "::CHECK_MK::"
+#    type: allow
+#    hosts: [CHECKHEALTH]
+#    actions: ["cluster:monitor/health"]
+#    verbosity: error
 
   - name: "::LOGSTASH::"
     auth_key: LOGSTASH_RW_USERNAME:LOGSTASH_RW_PASSWORD
@@ -34,7 +33,7 @@ readonlyrest:
     verbosity: error
 
   - name: "::KIBANA_RW::"
-    auth_key: KIBANA_RW_USERNAME:KIBANA_RW_PASSWORD
+    auth_key: ELASTICSEARCH_USERNAME:ELASTICSEARCH_PASSWORD
     type: allow
     #hosts: [192.168.0.0/16]
     #indices: [".kibana"]

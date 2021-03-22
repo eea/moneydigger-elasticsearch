@@ -1,8 +1,8 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.14
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.9.3
 
 MAINTAINER michimau <mauro.michielon@eea.europa.eu>
 
-COPY readonlyrest-1.27.0_es6.8.14.zip ./readonlyrest.zip
+COPY readonlyrest-1.28.0_es7.9.3.zip ./readonlyrest.zip
 
 COPY /config/elasticsearch.yml /elasticsearch.yml
 COPY /config/readonlyrest.yml /readonlyrest.yml

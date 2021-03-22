@@ -21,8 +21,9 @@ if [[ $ELASTICSEARCH_MASTER = "YES" ]]; then
 
   rm -rf /tmp/ssl
   mkdir -p /tmp/ssl
-  /opt/jdk-15.0.1+9/bin/keytool -genkey -keyalg RSA -noprompt -alias $SERVERNAME -dname "CN=$SERVERNAME,OU=IDM,O=EEA,L=IDM1,C=DK" -deststoretype pkcs12 -keystore /tmp/ssl/self.jks -storepass $KIBANA_RW_PASSWORD -keypass $KIBANA_RW_PASSWORD
-  /opt/jdk-15.0.1+9/bin/keytool -keystore  /tmp/ssl/self.jks -alias $SERVERNAME -export -file  /tmp/ssl/self.cert -srcstorepass $KIBANA_RW_PASSWORD -deststorepass $KIBANA_RW_PASSWORD
+  /usr/share/elasticsearch/jdk/bin/keytool -genkey -keyalg RSA -noprompt -alias $SERVERNAME -dname "CN=$SERVERNAME,OU=IDM,O=EEA,L=IDM1,C=DK" -deststoretype pkcs12 -keystore /tmp/ssl/self.jks -storepass $ELASTICSEARCH_PASSWORD -keypass $ELASTICSEARCH_PASSWORD
+  /usr/share/elasticsearch/jdk/bin/keytool -keystore  /tmp/ssl/self.jks -alias $SERVERNAME -export -file  /tmp/ssl/self.cert -srcstorepass $ELASTICSEARCH_PASSWORD -deststorepass $ELASTICSEARCH_PASSWORD
+  #/opt/jdk-15.0.1+9/bin/keytool
 
   rm -f /usr/share/elasticsearch/config/self.jks 
   cp /tmp/ssl/self.jks /usr/share/elasticsearch/config/self.jks
@@ -32,25 +33,27 @@ if [[ $ELASTICSEARCH_MASTER = "YES" ]]; then
   #sed "s#CHECKHEALTH#$CHECKHEALTH#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
   sed "s#CHECKHEALTH#$CHECKHEALTH#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
   
-  echo "node.master: true" >> /usr/share/elasticsearch/config/elasticsearch.yml
-  echo "http.type: ssl_netty4" >> /usr/share/elasticsearch/config/elasticsearch.yml
+  #echo "node.master: true" >> /usr/share/elasticsearch/config/elasticsearch.yml
+  #echo "http.type: ssl_netty4" >> /usr/share/elasticsearch/config/elasticsearch.yml
 
-  sed "s#KIBANA_RW_USERNAME#$KIBANA_RW_USERNAME#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
-  sed "s#KIBANA_RW_PASSWORD#$KIBANA_RW_PASSWORD#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
-  sed "s#KIBANA_RW_USERNAME#$KIBANA_RW_USERNAME#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
-  sed "s#KIBANA_RW_PASSWORD#$KIBANA_RW_PASSWORD#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
+#  sed "s#ELASTICSEARCH_USERNAME#$ELASTCISERACH_USERNAME#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
+#  sed "s#ELASTICSEARCH_PASSWORD#$ELASTICSEARCH_PASSWORD#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
+  sed "s#ELASTICSEARCH_USERNAME#$ELASTICSEARCH_USERNAME#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
+  sed "s#ELASTICSEARCH_PASSWORD#$ELASTICSEARCH_PASSWORD#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
 
-  sed "s#LOGSTASH_RW_USERNAME#$LOGSTASH_RW_USERNAME#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
-  sed "s#LOGSTASH_RW_PASSWORD#$LOGSTASH_RW_PASSWORD#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
+  sed "s#LOGSTASH_RW_USERNAME#$LOGSTASH_RW_USERNAME#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
+  sed "s#LOGSTASH_RW_PASSWORD#$LOGSTASH_RW_PASSWORD#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
+
+  sed "s#LOGSTASH_RW_USERNAME#$LOGSTASH_RW_USERNAME#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
+  sed "s#LOGSTASH_RW_PASSWORD#$LOGSTASH_RW_PASSWORD#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
 
   if [ "$KIBANA_RO_USERNAME" ]; then
-    sed "s#KIBANA_RO_USERNAME#$KIBANA_RO_USERNAME#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
-    sed "s#KIBANA_RO_PASSWORD#$KIBANA_RO_PASSWORD#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
+    sed "s#KIBANA_RO_USERNAME#$KIBANA_RO_USERNAME#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
+    sed "s#KIBANA_RO_PASSWORD#$KIBANA_RO_PASSWORD#g" -i /usr/share/elasticsearch/config/readonlyrest.yml
   fi
  
 else
-  echo "node.master: false" >> /usr/share/elasticsearch/config/elasticsearch.yml
-  echo 'discovery.zen.ping.unicast.hosts: ["ELASTICSEARCH_MASTER"]' >> /usr/share/elasticsearch/config/elasticsearch.yml
+  #echo "node.master: false" >> /usr/share/elasticsearch/config/elasticsearch.yml
   sed "s#ELASTICSEARCH_MASTER#$ELASTICSEARCH_MASTER#g" -i /usr/share/elasticsearch/config/elasticsearch.yml
 fi
 
@@ -68,7 +71,6 @@ if [ "$1" = 'elasticsearch' -a "$(id -u)" = '0' ]; then
 	set -- gosu elasticsearch "$@"
 	#exec gosu elasticsearch "$BASH_SOURCE" "$@"
 fi
-
 
 # As argument is not related to elasticsearch,
 # then assume that user wants to run his own process,
